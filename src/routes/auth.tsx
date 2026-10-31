@@ -41,7 +41,7 @@ const passwordSchema = z
 // Supabase password auth expects an email identifier. This deterministic, reserved
 // .invalid address is an internal login key only; users never enter or receive email.
 function usernameLoginId(username: string) {
-  return `${username.trim().toLowerCase()}@car-chaos.invalid`;
+  return `${username.trim().toLowerCase()}@carchaos.org`;
 }
 
 function AuthPage() {

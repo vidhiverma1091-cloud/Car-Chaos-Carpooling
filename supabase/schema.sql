@@ -1,11 +1,27 @@
 -- ==============================================================================
--- CAR CHAOS - COMPLETE DATABASE SCHEMA & SECURITY POLICIES
+-- CAR CHAOS - COMPLETE DATABASE SCHEMA, AUTO-CONFIRM & SECURITY POLICIES
 -- ==============================================================================
--- Run this script in the Supabase SQL Editor to set up all tables, triggers,
--- Realtime listeners, and Row-Level Security (RLS) policies.
+-- Run this script in the Supabase SQL Editor to set up all tables, auto-confirm
+-- triggers (no email confirmation needed), and Row-Level Security (RLS) policies.
 -- ==============================================================================
 
--- 1. PROFILES TABLE & AUTH TRIGGER
+-- 1. AUTO-CONFIRM NEW ACCOUNTS INSTANTLY (NO EMAIL CONFIRMATION REQUIRED)
+-- ------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.auto_confirm_user()
+RETURNS trigger AS $$
+BEGIN
+  NEW.email_confirmed_at = COALESCE(NEW.email_confirmed_at, now());
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created_confirm ON auth.users;
+CREATE TRIGGER on_auth_user_created_confirm
+  BEFORE INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION public.auto_confirm_user();
+
+-- 2. PROFILES TABLE & AUTH TRIGGER
 -- ------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.profiles (
   id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -64,7 +80,7 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- 2. RIDE POSTS TABLE
+-- 3. RIDE POSTS TABLE
 -- ------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.ride_posts (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -95,7 +111,7 @@ CREATE POLICY "own post update" ON public.ride_posts FOR UPDATE TO authenticated
 DROP POLICY IF EXISTS "own post delete" ON public.ride_posts;
 CREATE POLICY "own post delete" ON public.ride_posts FOR DELETE TO authenticated USING (auth.uid() = user_id);
 
--- 3. RIDE REQUESTS TABLE
+-- 4. RIDE REQUESTS TABLE
 -- ------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.ride_requests (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -127,7 +143,7 @@ CREATE POLICY "owner decides" ON public.ride_requests FOR UPDATE TO authenticate
 -- Enable Realtime for ride coordination
 ALTER PUBLICATION supabase_realtime ADD TABLE public.ride_requests;
 
--- 4. BOOKED RIDES COUNTER FUNCTION
+-- 5. BOOKED RIDES COUNTER FUNCTION
 -- ------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.booked_rides_count() RETURNS integer
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
