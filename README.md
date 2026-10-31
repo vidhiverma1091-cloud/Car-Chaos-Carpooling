@@ -61,8 +61,8 @@ car-chaos/
 ## Quickstart Guide
 
 ### 1. Prerequisites
-- [Bun](https://bun.sh) (v1.2+) or Node.js (v20+)
-- A free [Supabase](https://supabase.com) account
+- Bun (v1.2+) or Node.js (v20+)
+- A Supabase account
 
 ### 2. Clone the Repository
 ```bash
@@ -80,15 +80,7 @@ bun install
 2. Copy and paste the entire script from `supabase/schema.sql` and click **Run**.
 3. All tables, security policies, and automatic confirmation triggers are created.
 
-### 5. Environment Variables
-Create a `.env` file in the project root:
-```env
-VITE_SUPABASE_PROJECT_ID=your_project_id
-VITE_SUPABASE_URL=https://your_project_id.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=your_publishable_anon_key
-```
-
-### 6. Run Development Server
+### 5. Run Development Server
 ```bash
 bun run dev
 ```
