@@ -80,12 +80,6 @@ bun install
 2. Copy and paste the entire script from `supabase/schema.sql` and click **Run**.
 3. All tables, security policies, and automatic confirmation triggers are created.
 
-### 5. Run Development Server
-```bash
-bun run dev
-```
-Open http://localhost:3000 in your browser.
-
 ---
 
 ## Security & Privacy Architecture
