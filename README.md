@@ -1,4 +1,4 @@
-# 🚗 Car Chaos – VIT on Wheels
+# Car Chaos – VIT on Wheels
 ### *Privacy-First Student Carpooling & Ride Sharing Platform*
 
 [![React 19](https://img.shields.io/badge/React-19.2-blue?logo=react)](https://react.dev/)
@@ -12,18 +12,18 @@ A modern, full-stack carpooling web application built specifically for college s
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-- 🔐 **Privacy-Preserving Authentication**: Zero email collection! Users register and log in strictly using a unique **Username + Password + Confirmation**, preventing personal data breaches.
-- 🚘 **Post Rides**: Drivers can post trips with origin, destination, date, departure time, available seats, gender preferences, and special notes.
-- 🔍 **Search & Discover**: Students can filter and search available rides matching their schedule and route.
-- ⚡ **Realtime Ride Coordination**: Live booking requests with instant accept/decline statuses powered by Supabase Realtime WebSocket listeners.
-- 💬 **Private Ephemeral Chat**: Drivers and accepted passengers coordinate trip details without persistent chat logs.
-- 🎨 **Modern Aesthetic UI**: Built with Tailwind CSS v4, smooth glassmorphism, responsive mobile-friendly layouts, and playful micro-animations.
+- **Privacy-Preserving Authentication**: Zero email collection. Users register and log in strictly using a unique Username, Password, and Confirmation, eliminating personal data breach vectors.
+- **Post Rides**: Drivers can post trips with origin, destination, date, departure time, available seats, gender preferences, and special notes.
+- **Search & Discover**: Students can filter and search available rides matching their schedule and route.
+- **Realtime Ride Coordination**: Live booking requests with instant accept/decline statuses powered by Supabase Realtime WebSocket listeners.
+- **Secure Persistent Chat**: Drivers and accepted passengers coordinate trip details with message persistence and strict multi-tenant isolation.
+- **Modern Responsive UI**: Built with Tailwind CSS v4, smooth glassmorphism, responsive mobile-friendly layouts, and accessible UI controls.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technologies |
 |---|---|
@@ -34,7 +34,7 @@ A modern, full-stack carpooling web application built specifically for college s
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 car-chaos/
@@ -58,7 +58,7 @@ car-chaos/
 
 ---
 
-## 🚀 Quickstart Guide
+## Quickstart Guide
 
 ### 1. Prerequisites
 - [Bun](https://bun.sh) (v1.2+) or Node.js (v20+)
@@ -66,8 +66,8 @@ car-chaos/
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/car-chaos.git
-cd car-chaos
+git clone https://github.com/vidhiverma1091-cloud/Car-Chaos-Carpooling.git
+cd Car-Chaos-Carpooling
 ```
 
 ### 3. Install Dependencies
@@ -76,9 +76,9 @@ bun install
 ```
 
 ### 4. Database Setup (Supabase)
-1. In your Supabase Dashboard, open the **SQL Editor** (`>_`).
-2. Copy and paste the entire script from [`supabase/schema.sql`](supabase/schema.sql) and click **Run**.
-3. Go to **Authentication** → **Providers** → **Email** and turn **OFF** "Confirm email" (since authentication is purely username-based).
+1. In your Supabase Dashboard, open the **SQL Editor**.
+2. Copy and paste the entire script from `supabase/schema.sql` and click **Run**.
+3. All tables, security policies, and automatic confirmation triggers are created.
 
 ### 5. Environment Variables
 Create a `.env` file in the project root:
@@ -92,17 +92,17 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your_publishable_anon_key
 ```bash
 bun run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser!
+Open http://localhost:3000 in your browser.
 
 ---
 
-## 🔒 Security & Privacy Architecture
+## Security & Privacy Architecture
 
 - **Row-Level Security (RLS)**: Enforced directly at the PostgreSQL layer. Users can only update their own ride posts and view authorized requests.
 - **Data Minimization**: Zero collection of personal emails, phone numbers, or trackable identifiers.
-- **Encrypted Credentials**: Passwords are securely hashed with industry-standard bcrypt/Argon2 via Supabase Auth.
+- **Encrypted Credentials**: Passwords are securely hashed with industry-standard bcrypt via Supabase Auth.
 
 ---
 
-## 📝 License
+## License
 This project is open-source and available under the [MIT License](LICENSE).
