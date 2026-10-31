@@ -143,7 +143,47 @@ CREATE POLICY "owner decides" ON public.ride_requests FOR UPDATE TO authenticate
 -- Enable Realtime for ride coordination
 ALTER PUBLICATION supabase_realtime ADD TABLE public.ride_requests;
 
--- 5. BOOKED RIDES COUNTER FUNCTION
+-- 5. RIDE MESSAGES TABLE (OFFLINE PERSISTENCE & SECURE CHAT)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.ride_messages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  request_id uuid NOT NULL REFERENCES public.ride_requests(id) ON DELETE CASCADE,
+  sender_id uuid NOT NULL DEFAULT auth.uid(),
+  sender_name text NOT NULL CHECK (char_length(sender_name) BETWEEN 1 AND 80),
+  content text NOT NULL CHECK (char_length(content) BETWEEN 1 AND 1000),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+GRANT SELECT, INSERT ON public.ride_messages TO authenticated;
+GRANT ALL ON public.ride_messages TO service_role;
+ALTER TABLE public.ride_messages ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "chat participants read" ON public.ride_messages;
+CREATE POLICY "chat participants read" ON public.ride_messages FOR SELECT TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.ride_requests r
+      JOIN public.ride_posts p ON r.post_id = p.id
+      WHERE r.id = request_id
+      AND (r.requester_id = auth.uid() OR p.user_id = auth.uid())
+    )
+  );
+
+DROP POLICY IF EXISTS "chat participants insert" ON public.ride_messages;
+CREATE POLICY "chat participants insert" ON public.ride_messages FOR INSERT TO authenticated
+  WITH CHECK (
+    auth.uid() = sender_id AND
+    EXISTS (
+      SELECT 1 FROM public.ride_requests r
+      JOIN public.ride_posts p ON r.post_id = p.id
+      WHERE r.id = request_id
+      AND (r.requester_id = auth.uid() OR p.user_id = auth.uid())
+    )
+  );
+
+ALTER PUBLICATION supabase_realtime ADD TABLE public.ride_messages;
+
+-- 6. BOOKED RIDES COUNTER FUNCTION
 -- ------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.booked_rides_count() RETURNS integer
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
