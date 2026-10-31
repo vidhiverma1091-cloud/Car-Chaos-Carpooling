@@ -58,30 +58,6 @@ car-chaos/
 
 ---
 
-## Quickstart Guide
-
-### 1. Prerequisites
-- Bun (v1.2+) or Node.js (v20+)
-- A Supabase account
-
-### 2. Clone the Repository
-```bash
-git clone https://github.com/vidhiverma1091-cloud/Car-Chaos-Carpooling.git
-cd Car-Chaos-Carpooling
-```
-
-### 3. Install Dependencies
-```bash
-bun install
-```
-
-### 4. Database Setup (Supabase)
-1. In your Supabase Dashboard, open the **SQL Editor**.
-2. Copy and paste the entire script from `supabase/schema.sql` and click **Run**.
-3. All tables, security policies, and automatic confirmation triggers are created.
-
----
-
 ## Security & Privacy Architecture
 
 - **Row-Level Security (RLS)**: Enforced directly at the PostgreSQL layer. Users can only update their own ride posts and view authorized requests.
